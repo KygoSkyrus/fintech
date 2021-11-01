@@ -8,9 +8,7 @@ function App() {
   const [symbol, setsymbol] = useState();
   const [timeZone, settimeZone] = useState();
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+
   function handleKeyDown(e){
     if (e.key === 'Enter') {
       getData();
@@ -19,23 +17,22 @@ function App() {
 
   const getData = () => {
 
-    const symb = document.getElementById("symbol").value;
-    console.log(symb);
-
+    const symb = document.getElementById("symbol").value.toString().toUpperCase();
 
     const apiKey = "XZOG02EWJKHIHJ2Z";
-    const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${symb}&apikey=${apiKey}`;
 
-    fetch(url)
+    const daily = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${symb}&apikey=${apiKey}`;
+
+    const intraday = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symb}&interval=5min&apikey=${apiKey}`;
+
+    fetch(daily)
       .then(function (response) {
         return response.json();
       })
       .then(function (data) {
         parseObjectKeys(data);
         const timeseries = data['Time Series (Daily)'];
-        console.log(timeseries);
-        const SYMBOL=symbol.toString().toUpperCase();
-        console.log(symbol.toString().toUpperCase())
+        //console.log(timeseries);
         setdata(formatdata(timeseries));
       })
   }
@@ -55,7 +52,7 @@ function App() {
     }
   }
 
-  console.log(data);
+  //console.log(data);
   //console.log(data["Meta Data"]["1. Symbol"]);
 
 
@@ -146,7 +143,8 @@ function App() {
             data: [
               {
                 type: 'candlestick',
-				        name: `${SYMBOL}`,
+                showInLegend: true,
+				        name: `${symbol} Stocks`,
                 dataPoints: data.map(data => ({
                   x: new Date(data.date),
                   // The OHLC for the data point
@@ -168,4 +166,3 @@ function App() {
 }
 
 export default App;
-//XZOG02EWJKHIHJ2Z
