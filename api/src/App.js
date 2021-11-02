@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { CanvasJSChart } from 'canvasjs-react-charts';
+import React, { useState } from 'react';
+import Candlestick from './Candlestick';
 import './App.css';
 
 function App() {
@@ -7,9 +7,11 @@ function App() {
   const [data, setdata] = useState({});
   const [symbol, setsymbol] = useState();
   const [timeZone, settimeZone] = useState();
+  const apiKey = "XZOG02EWJKHIHJ2Z";
 
+  const [symbols, setsymbols] = useState([]);
 
-  function handleKeyDown(e){
+  function handleKeyDown(e) {
     if (e.key === 'Enter') {
       getData();
     }
@@ -18,22 +20,26 @@ function App() {
   const getData = () => {
 
     const symb = document.getElementById("symbol").value.toString().toUpperCase();
+    const selected = document.getElementById("select").value;
 
-    const apiKey = "XZOG02EWJKHIHJ2Z";
 
-    const daily = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${symb}&apikey=${apiKey}`;
+    const url = `https://www.alphavantage.co/query?function=TIME_SERIES_${selected}&symbol=${symb}&apikey=${apiKey}`;
 
-    const intraday = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symb}&interval=5min&apikey=${apiKey}`;
 
-    fetch(daily)
+    fetch(url)
       .then(function (response) {
         return response.json();
       })
       .then(function (data) {
+        console.log(data)
         parseObjectKeys(data);
-        const timeseries = data['Time Series (Daily)'];
-        //console.log(timeseries);
-        setdata(formatdata(timeseries));
+        if (selected === "DAILY") {
+          setdata(formatdata(data['Time Series (Daily)']));
+        } else if (selected === "WEEKLY") {
+          setdata(formatdata(data['Weekly Time Series']));
+        } else if (selected === "MONTHLY") {
+          setdata(formatdata(data['Monthly Time Series']));
+        }
       })
   }
 
@@ -45,17 +51,13 @@ function App() {
         if (prop === "Meta Data") {
           setsymbol(sub["2. Symbol"]);
           settimeZone(sub["5. Time Zone"]);
+          getSymbol();
         }
 
         parseObjectKeys(sub);
       }
     }
   }
-
-  //console.log(data);
-  //console.log(data["Meta Data"]["1. Symbol"]);
-
-
 
   function formatdata(data) {
     // Convert data from an object to an array
@@ -72,95 +74,50 @@ function App() {
     });
   }
 
+  function getSymbol() {
+    fetch(`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=apple&apikey=${apiKey}`)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        data.bestMatches.map(r => console.log(r["1. symbol"]))
+        setsymbols(data.bestMatches);
+        //console.log(data.bestMatches);
+      });
+  }
+
+  console.log(symbols);
+
 
   return (
-    <div className="App">
+    <div className="app">
       <p>Symbol : {symbol}</p>
       <p>Time zone : {timeZone}</p>
 
-      <input type="text" id="symbol" onKeyDown={handleKeyDown}/>
-      <button onClick={() => getData()}>show</button>
+     
+        <label htmlFor="browser">Enter stock symbol:</label>
+        <input type="text" id="symbol" name="symbol" list="symbols" onKeyDown={handleKeyDown} required onInput={() => getSymbol()}/>  
+        <datalist id="symbols">
+          {symbols.map(x=> <option value={x["1. symbol"]} key={x["1. symbol"]} /> )}
+        </datalist>
 
-      {data.length === 100 ?
-        <CanvasJSChart
-          options={{
-            theme: "light2", // "light1", "light2", "dark1", "dark2"
-            animationEnabled: true,
-            exportEnabled: true,
-            title: {
-              text: `${symbol} Stock Price `
-            },
-            axisY: {
-              // Minimum value is 10% less than the lowest price in the dataset
-              minimum: Math.min(...data.map(data => data.low)) / 1.1,
-              // Minimum value is 10% more than the highest price in the dataset
-              maximum: Math.max(...data.map(data => data.high)) * 1.1,
-              crosshair: {
-                enabled: true,
-                snapToDataPoint: true
-              }
-            },
-            axisX: {
-              crosshair: {
-                enabled: true,
-                snapToDataPoint: true
-              },
-              scaleBreaks: {
-                spacing: 0,
-                fillOpacity: 0,
-                lineThickness: 0,
-                customBreaks: data.reduce((breaks, value, index, array) => {
-                  // Just return on the first iteration
-                  // Since there is no previous data point
-                  if (index === 0) return breaks;
+        <div>
+          <label htmlFor="ts">Choose a timeseries : </label>
 
-                  // Time in UNIX for current and previous data points
-                  const currentDataPointUnix = Number(new Date(value.date));
-                  const previousDataPointUnix = Number(new Date(array[index - 1].date));
+          <select name="select" id="select">
+            <option value="">--Please choose an option--</option>
+            <option value="DAILY">Daily</option>
+            <option value="WEEKLY">Weekly</option>
+            <option value="MONTHLY">Monthly</option>
+          </select>
+        </div>
+        <button onClick={() => getSymbol()} type="submit" value="submit" >show</button>
+      
 
-                  // One day converted to milliseconds
-                  const oneDayInMs = 86400000;
-
-                  // Difference between the current and previous data points
-                  // In milliseconds
-                  const difference = previousDataPointUnix - currentDataPointUnix;
-
-                  return difference === oneDayInMs
-                    // Difference is 1 day, no scale break is needed
-                    ? breaks
-                    // Difference is more than 1 day, need to create
-                    // A new scale break
-                    : [
-                      ...breaks,
-                      {
-                        startValue: currentDataPointUnix,
-                        endValue: previousDataPointUnix - oneDayInMs
-                      }
-                    ]
-                }, [])
-              }
-            },
-            data: [
-              {
-                type: 'candlestick',
-                showInLegend: true,
-				        name: `${symbol} Stocks`,
-                dataPoints: data.map(data => ({
-                  x: new Date(data.date),
-                  // The OHLC for the data point
-                  // The order is IMPORTANT!
-                  y: [
-                    data.open,
-                    data.high,
-                    data.low,
-                    data.close
-                  ]
-                }))
-              }
-            ]
-          }}
-        /> : null}
-
+      <div className="chart">
+        {data.length > 0 ?
+          <Candlestick data={data} symbol={symbol} /> : null}
+      </div>
     </div>
   );
 }
