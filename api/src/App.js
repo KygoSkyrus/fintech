@@ -20,6 +20,7 @@ function App() {
   const getData = () => {
 
     const symb = document.getElementById("symbol").value.toString().toUpperCase();
+    console.log(symb);
     const selected = document.getElementById("select").value;
 
 
@@ -75,15 +76,27 @@ function App() {
   }
 
   function getSymbol() {
-    fetch(`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=apple&apikey=${apiKey}`)
+    const symb = document.getElementById("symbol").value.toString().toUpperCase();
+    const datalist=document.getElementById("symbols");
+    console.log(symb)
+    
+    if(symb.length>=1){
+      fetch(`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${symb}&apikey=${apiKey}`)
       .then(function (response) {
         return response.json();
       })
       .then(function (data) {
-        data.bestMatches.map(r => console.log(r["1. symbol"]))
+        data.bestMatches.map(r => {
+          //let option=`<option value={x["1. symbol"]} key={x["1. symbol"]} />`;
+          var z = document.createElement('option');
+          z.value=r["1. symbol"];
+          datalist.appendChild(z);
+        })
         setsymbols(data.bestMatches);
         //console.log(data.bestMatches);
       });
+    }
+    
   }
 
   console.log(symbols);
@@ -94,25 +107,25 @@ function App() {
       <p>Symbol : {symbol}</p>
       <p>Time zone : {timeZone}</p>
 
-     
-        <label htmlFor="browser">Enter stock symbol:</label>
-        <input type="text" id="symbol" name="symbol" list="symbols" onKeyDown={handleKeyDown} required onInput={() => getSymbol()}/>  
-        <datalist id="symbols">
-          {symbols.map(x=> <option value={x["1. symbol"]} key={x["1. symbol"]} /> )}
-        </datalist>
 
-        <div>
-          <label htmlFor="ts">Choose a timeseries : </label>
+      <label htmlFor="browser">Enter stock symbol:</label>
+      <input type="text" id="symbol" name="symbol" list="symbols" onKeyDown={handleKeyDown} onInput={() => getSymbol()} placeholder="enter symbol"  required autoComplete="off"/>
+      <datalist id="symbols">
+        {/* {symbols.map(x => <option value={x["1. symbol"]} key={x["1. symbol"]} />)} */}
+      </datalist>
 
-          <select name="select" id="select">
-            <option value="">--Please choose an option--</option>
-            <option value="DAILY">Daily</option>
-            <option value="WEEKLY">Weekly</option>
-            <option value="MONTHLY">Monthly</option>
-          </select>
-        </div>
-        <button onClick={() => getSymbol()} type="submit" value="submit" >show</button>
-      
+      <div>
+        <label htmlFor="ts">Choose a timeseries : </label>
+
+        <select name="select" id="select">
+          <option value="">--Please choose an option--</option>
+          <option value="DAILY">Daily</option>
+          <option value="WEEKLY">Weekly</option>
+          <option value="MONTHLY">Monthly</option>
+        </select>
+      </div>
+      <button onClick={() => getData()} type="submit" value="submit" >show</button>
+
 
       <div className="chart">
         {data.length > 0 ?
