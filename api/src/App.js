@@ -17,6 +17,22 @@ function App() {
     }
   }
 
+  function parseObjectKeys(obj) {
+    for (var prop in obj) {
+      //console.log(prop)
+      var sub = obj[prop]
+      if (typeof (sub) == "object") {
+        if (prop === "Meta Data") {
+          setsymbol(sub["2. Symbol"]);
+          settimeZone(sub["5. Time Zone"]);
+          getSymbol();
+        }
+
+        parseObjectKeys(sub);
+      }
+    }
+  }
+
   const getData = () => {
 
     const symb = document.getElementById("symbol").value.toString().toUpperCase();
@@ -44,24 +60,11 @@ function App() {
       })
   }
 
-  function parseObjectKeys(obj) {
-    for (var prop in obj) {
-      //console.log(prop)
-      var sub = obj[prop]
-      if (typeof (sub) == "object") {
-        if (prop === "Meta Data") {
-          setsymbol(sub["2. Symbol"]);
-          settimeZone(sub["5. Time Zone"]);
-          getSymbol();
-        }
-
-        parseObjectKeys(sub);
-      }
-    }
-  }
 
   function formatdata(data) {
+    console.log(data);
     // Convert data from an object to an array
+
     return Object.entries(data).map(entries => {
       const [date, priceData] = entries;
 
@@ -75,28 +78,50 @@ function App() {
     });
   }
 
-  function getSymbol() {
+  
+ async function  getSymbol() {
     const symb = document.getElementById("symbol").value.toString().toUpperCase();
-    const datalist=document.getElementById("symbols");
-    console.log(symb)
-    
-    if(symb.length>=1){
-      fetch(`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${symb}&apikey=${apiKey}`)
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (data) {
-        data.bestMatches.map(r => {
-          //let option=`<option value={x["1. symbol"]} key={x["1. symbol"]} />`;
-          var z = document.createElement('option');
-          z.value=r["1. symbol"];
-          datalist.appendChild(z);
+    const datalist = document.getElementById("symbols");
+    console.log(symb);
+
+    if (symb.length >= 1) {
+     await fetch(`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${symb}&apikey=${apiKey}`)
+        .then(function (response) {
+          return response.json();
         })
-        setsymbols(data.bestMatches);
-        //console.log(data.bestMatches);
-      });
+        .then(function (data) {
+
+          
+
+          console.log("symbols : " + symbols);
+          //console.log("symbols typeof:"+ symbols.typeOf());
+
+
+          // if (data.bestmatches === undefined) {
+          //   console.log("null runs");
+          //     var z = document.createElement('option');
+          //     z.value = "no data found";
+          //     datalist.appendChild(z);
+          // }
+          if(data.bestMatches===undefined){
+            console.log("is undefined");
+          }else{
+            //data.bestMatches.map(r => {
+
+              console.log("map runs");
+              //console.log(r);
+              //let option=`<option value={x["1. symbol"]} key={x["1. symbol"]} />`;
+              //var z = document.createElement('option');
+              //z.value = r["1. symbol"];
+              //datalist.appendChild(z);
+              setsymbols(data.bestMatches);
+            //})
+          }
+          //setsymbols(data.bestMatches);
+          //console.log(data.bestMatches);
+        });
     }
-    
+
   }
 
   console.log(symbols);
@@ -109,9 +134,9 @@ function App() {
 
 
       <label htmlFor="browser">Enter stock symbol:</label>
-      <input type="text" id="symbol" name="symbol" list="symbols" onKeyDown={handleKeyDown} onInput={() => getSymbol()} placeholder="enter symbol"  required autoComplete="off"/>
+      <input type="text" id="symbol" name="symbol" list="symbols" onKeyDown={handleKeyDown} onInput={() => getSymbol()} placeholder="enter symbol" required autoComplete="off" />
       <datalist id="symbols">
-        {/* {symbols.map(x => <option value={x["1. symbol"]} key={x["1. symbol"]} />)} */}
+        {symbols.map(x => <option value={x["1. symbol"]} key={x["1. symbol"]} />)} 
       </datalist>
 
       <div>
@@ -128,7 +153,7 @@ function App() {
 
 
       <div className="chart">
-        {data.length > 0 ?
+        {data.length >=1 ?
           <Candlestick data={data} symbol={symbol} /> : null}
       </div>
     </div>
