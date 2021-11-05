@@ -2,15 +2,30 @@ body{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  background-color: rgb(43, 43, 42);
 }
 .app{
   height: 90vh;
-  background-color: rgb(196, 196, 193);
-  margin: 5vh;
-  padding: 4vw;
+  background-color: #e6e6e6;
+  margin: 30px;
+  padding: 50px;
   box-sizing: border-box;
-  border-radius: 8px;
+  border-radius: 8px; 
+  box-shadow: 0 0 10px;
+  display: flex;
+  justify-content: space-between;
 }
 .chart{
   width: 700px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+.chart-alternate{
+ width: 600px;
+  height: 450px;
+  float: right;
+  background: url(Images/4068830.jpg);
+  background-position: center;
+  background-size: cover;border: 1px solid black;
 }

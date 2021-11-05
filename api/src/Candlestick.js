@@ -13,7 +13,7 @@ const Candlestick = (props) => {
             text: ""
           },
           subtitles: [{
-            text: "Weekly Averages"
+            text: ""
           }],
           axisY: {
             prefix: "$",
