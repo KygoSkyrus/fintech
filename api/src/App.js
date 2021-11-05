@@ -63,7 +63,7 @@ function App() {
           setsymbols(data.bestMatches);
         });
     }
-  }
+  } 
 
   console.log(symbols);
 
