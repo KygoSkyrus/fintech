@@ -133,7 +133,7 @@ function App() {
 
           <datalist id="symbols">
             {symbols === undefined ? null :
-              symbols.map(x => <option value={x["1. symbol"]} key={x["1. symbol"]} onClick={()=>setinfo(x)}>{x["2. name"]}</option>)}
+              symbols.map(x => <option value={x["1. symbol"]} key={x["1. symbol"]} >{x["2. name"]}</option>)}
           </datalist>
         </div>
 
@@ -152,9 +152,9 @@ function App() {
         <p>Symbol : {symbol}</p>
         <p>Time zone : {timeZone}</p>
 
-{data.length >= 1?
+{/* {data.length >= 1?
   <p>name : {info.name}</p> : null
-}
+} */}
         
 
 
