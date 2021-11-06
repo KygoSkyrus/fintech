@@ -50,7 +50,7 @@ function App() {
   const getSymbol = () => {
 
     const symb = document.getElementById("symbol").value.toString().toUpperCase();
-    //const datalist = document.getElementById("symbols");
+    const datalist = document.getElementById("symbols");
 
     console.log(symb);
 
@@ -90,7 +90,7 @@ function App() {
 
         } else {
           parseObjectKeys(data);
-
+          setInfoData(symb);
           if (selected === "DAILY") {
             setdata(formatdata(data['Time Series (Daily)']));
             console.log(data);
@@ -103,6 +103,7 @@ function App() {
 
       })
   }
+
 
 
   function formatdata(data) {
@@ -120,12 +121,28 @@ function App() {
     });
   }
 
+  const setInfoData = (s) => {
+
+    const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${s}&apikey=IVKQJTLVOXVEB51T`;
+
+    fetch(url)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        console.log(data.bestmatches);
+        if (data !== undefined) {
+          data.bestMatches.map(x => x["1. symbol"] == s ? setinfo(x) : null)
+        }
+      })
+  }
+
 
   return (
     <div className="app">
 
-      <div className="">
-        <h1>ROCK STOCK</h1>
+      <div className="left">
+        <h1 className="mb-4">ROCK STOCK</h1>
 
         <div className="mb-3">
           <label htmlFor="browser">Enter stock symbol:</label>
@@ -147,16 +164,22 @@ function App() {
           </select>
         </div>
 
-        <button onClick={() => getData()} type="submit" value="submit" className="btn btn-secondary">show</button>
+        <button onClick={() => getData()} type="submit" value="submit" className="btn btn-outline-secondary w-100 text-dark ">SHOW</button>
 
-        <p>Symbol : {symbol}</p>
-        <p>Time zone : {timeZone}</p>
 
-{/* {data.length >= 1?
-  <p>name : {info.name}</p> : null
-} */}
-        
-
+        {info ?
+          <div className="lh-1">
+            <p>Symbol : {symbol}</p>
+            <p>name : {info["2. name"]}</p>
+            <p>type : {info["3. type"]}</p>
+            <p>Region : {info["4. region"]}</p>
+            <p>marketOpen : {info["5. marketOpen"]}</p>
+            <p>marketClose : {info["6. marketClose"]}</p>
+            <p>Time zone : {timeZone}</p>
+            <p>currency : {info["8. currency"]}</p>
+          </div>
+          : null
+        }
 
       </div>
 

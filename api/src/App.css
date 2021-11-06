@@ -15,6 +15,16 @@ body{
   display: flex;
   justify-content: space-between;
 }
+
+.left{
+  width: 30%;
+}
+.btn:hover{
+  color: white !important;
+  
+}
+
+
 .chart{
   width: 700px;
   display: flex;
@@ -28,8 +38,9 @@ body{
   background: url(Images/4068830.jpg);
   background-position: center;
   background-size: cover;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgb(141, 141, 141);
+  border-radius: 13px;
+  box-shadow:  -6px -6px 13px #b3b3b3,
+             6px 6px 13px #ffffff;
 
 
 }
