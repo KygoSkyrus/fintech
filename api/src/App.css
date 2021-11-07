@@ -19,11 +19,37 @@ body{
 .left{
   width: 30%;
 }
+
 .btn:hover{
   color: white !important;
-  
+}
+.info{
+  margin-top: 40px;
+  text-align: center;
+}
+table{
+  width: 100%;border: 2px solid gray;
+}
+td:nth-child(1){
+  text-align: right;
+  border: 1px solid gray;
+  border-bottom: 2px solid gray;
+  padding-right: 10px;
+}
+td:nth-child(2){
+  text-align: left;
+  border: 1px solid gray;
+  border-bottom: 2px solid gray;
+  padding-left: 10px;
 }
 
+
+#line{
+  width: 1px;
+  height: 60vh;
+  background-color: rgb(175, 175, 175);
+  align-self: center;
+}
 
 .chart{
   width: 700px;
@@ -32,15 +58,72 @@ body{
   align-items: center;
 }
 .chart-alternate{
- width: 600px;
+  width: 600px;
   height: 450px;
   float: right;
   background: url(Images/4068830.jpg);
   background-position: center;
   background-size: cover;
   border-radius: 13px;
-  box-shadow:  -6px -6px 13px #b3b3b3,
-             6px 6px 13px #ffffff;
+  box-shadow:  -6px -6px 13px #b3b3b3, 6px 6px 13px #ffffff;
+}
 
+.error{
+  width: 500px;
+  position: fixed;
+  bottom: 3%;
+  right: 5%;
+  box-shadow:  0 0 20px black;
+}
 
+/*tablets*/
+@media (max-width:1020px) and (min-width:600px){
+  .app{
+    background-color: red;
+  }
+}
+
+/*smartphones*/
+@media (max-width:600px) {
+  .app{
+    height: fit-content;
+    background-color: green;
+    margin: 20px;
+    padding: 40px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .left{
+    background-color: pink;
+    width: 100%;
+    margin-bottom: 40px;
+  }
+  h1{
+    text-align: center;
+  }
+
+  #line{
+    width: 60vw;
+    height: 1px;
+    margin-bottom: 40px;
+  }
+
+  .chart{
+    width: inherit;
+  }
+  .chart-alternate{
+    width: 400px;
+    height: 267px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
+  .error{
+    width: 400px;
+
+    bottom: 2%;
+    right: 2%;
+    box-shadow:  0 0 20px black;
+  }
 }
