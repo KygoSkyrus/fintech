@@ -10,7 +10,10 @@ const Graph = (props) => {
 
   if (data.length >= 1) {
     return (
+
+      
       <Candlestick data={data} symbol={symbol} />
+      
     )
   } else {
     return <div className="chart-alternate"></div>;
@@ -23,7 +26,6 @@ function App() {
 
   const [data, setdata] = useState({});
   const [symbol, setsymbol] = useState();
-  const [timeZone, settimeZone] = useState();
   const [info, setinfo] = useState();
   const [warning, setwarning] = useState(false);
   const apiKey = "XZOG02EWJKHIHJ2Z";
@@ -39,7 +41,7 @@ function App() {
       if (typeof (sub) == "object") {
         if (prop === "Meta Data") {
           setsymbol(sub["2. Symbol"]);
-          settimeZone(sub["5. Time Zone"]);
+
           //getSymbol();
         }
 
@@ -199,7 +201,7 @@ function App() {
                 </tr>
                 <tr>
                   <td>Timezone</td>
-                  <td>{timeZone}</td>
+                  <td>{info["7. timezone"]}</td>
                 </tr>
                 <tr>
                   <td>Currency</td>
@@ -213,9 +215,8 @@ function App() {
         </div>
 
         <div id="line"></div>
-
         <div className="chart">
-          <Graph data={data} symbol={symbol} />
+        <Graph data={data} symbol={symbol} />
         </div>
       </div>
 

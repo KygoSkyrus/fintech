@@ -87,16 +87,14 @@ td:nth-child(2){
 @media (max-width:600px) {
   .app{
     height: fit-content;
-    background-color: green;
     margin: 20px;
-    padding: 40px;
+    padding: 30px;
     flex-direction: column;
     align-items: center;
   }
   .left{
-    background-color: pink;
     width: 100%;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
   }
   h1{
     text-align: center;
@@ -105,25 +103,22 @@ td:nth-child(2){
   #line{
     width: 60vw;
     height: 1px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
   }
 
   .chart{
-    width: inherit;
+    width: 80vw;
   }
   .chart-alternate{
-    width: 400px;
-    height: 267px;
-    background-position: center;
+    width: 90vw;
+    height: 227px;
     background-size: contain;
     background-repeat: no-repeat;
   }
 
   .error{
     width: 400px;
-
     bottom: 2%;
     right: 2%;
-    box-shadow:  0 0 20px black;
   }
 }
