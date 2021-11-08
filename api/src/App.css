@@ -4,6 +4,38 @@ body{
   box-sizing: border-box;
   background-color: rgb(43, 43, 42);
 }
+
+.mainlogo{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+.cont{
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.mainlogo img{
+  width: 120px;
+  border-radius: 4px;
+}
+.name{
+  width: fit-content;
+  position: absolute;
+  top: 0;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 1px;
+}
+.by{
+  position: absolute;
+  bottom: 0px;
+}
+
 .app{
   height: 90vh;
   background-color: #e6e6e6;
@@ -79,7 +111,6 @@ td:nth-child(2){
 /*tablets*/
 @media (max-width:1020px) and (min-width:600px){
   .app{
-    background-color: red;
   }
 }
 
