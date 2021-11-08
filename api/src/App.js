@@ -56,8 +56,6 @@ function App() {
   const getSymbol = () => {
 
     const symb = document.getElementById("symbol").value.toString().toUpperCase();
-    const datalist = document.getElementById("symbols");
-
     //console.log(symb);
 
     if (symb.length >= 1) {
@@ -122,7 +120,7 @@ function App() {
 
     const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${s}&apikey=IVKQJTLVOXVEB51T`;
 
-    if (s == "") {
+    if (s === "") {
       return null;
     } else {
       fetch(url)
@@ -133,7 +131,7 @@ function App() {
           //console.log(data.bestmatches);
           if (data !== undefined) {
             //setting info after matching the symbol
-            data.bestMatches.map(x => x["1. symbol"] == s ? setinfo(x) : null)
+            data.bestMatches.map(x => x["1. symbol"] === s ? setinfo(x) : null)
           }
         })
     }
