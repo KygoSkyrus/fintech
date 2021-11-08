@@ -6,8 +6,7 @@ import './App.css';
 const Graph = (props) => {
 
   const { data, symbol } = props;
-  console.log(props);
-  console.log(data);
+  //console.log(data);
 
   if (data.length >= 1) {
     return (
@@ -34,7 +33,7 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setsplashscreen(false);//splash screen for 2.5s when screen loads
-    }, 2500);
+    }, 3000);
   }, [])
 
   //extracting symbol from the meta data object
@@ -156,7 +155,7 @@ function App() {
             <h1 className="mb-4">ROCK STOCK</h1>
 
             <div className="mb-3">
-              <label htmlFor="browser">Enter stock symbol:</label>
+              <label htmlFor="browser">Stock symbol</label>
               <input type="text" id="symbol" name="symbol" list="symbols" onInput={() => getSymbol()} placeholder="for e.g. 'TSLA'" autoComplete="off" required className="form-control" />
 
               <datalist id="symbols">
